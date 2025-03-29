@@ -56,6 +56,8 @@ export default function SearchResultView() {
     setResults(ans);
   }, [navigator.onLine, keyword])
 
+  const PER_PAGE = 4;
+  const [from, to] = usePageUntil(page, PER_PAGE)
   
   useEffect(() => {
     /**
@@ -84,7 +86,7 @@ export default function SearchResultView() {
          * 加载到数据库中
          */
         async function setUserMetaToDatabase() {
-          console.log('appending', results);
+          console.info('appending', results);
           
           for (let result of results) {
             await db.user_cache.add({
@@ -106,10 +108,7 @@ export default function SearchResultView() {
       <Empty />
     </>
 
- 
-
-  const PER_PAGE = 4;
-  const [from, to] = usePageUntil(page, PER_PAGE)
+  
 
   return (
     <>

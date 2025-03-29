@@ -54,12 +54,12 @@ export function fetchResultsByKeyword(keyword: string, username: string): Promis
   //   //@ts-ignore
   //   return Promise.resolve({data: userinfo})
   // }
-
-  return axios.get(new URL("/search/search_word_contents?words=".concat(keyword), BASE_URL).toString(), {
+  const url = "/search/search_word_contents?words=".concat(keyword)
+  return axios.get(new URL(url, BASE_URL).toString(), {
     headers: {
       "username": username
     },
-    timeout: 10000 // 10s
+    timeout: 5_000 // 5s
   })
   // return enhancedFetch<SearchResult[]>("/search/search_word_contents?words=".concat(keyword), username);
 }

@@ -17,7 +17,7 @@ export function loginValidate(userName: string, password: string): Promise<{ mes
 export function isExpire(): boolean {
   return true;
 }
-export function registerValidate(userName: string, password: string): Promise<{ message: string }> {
+export function registerValidate(userName: string, password: string, email: string | undefined): Promise<{ message: string }> {
   return fetch(new URL('/user/register/', BASE_URL), {
     method: 'post',
     headers: {
@@ -25,7 +25,8 @@ export function registerValidate(userName: string, password: string): Promise<{ 
     },
     body: JSON.stringify({
       username: userName,
-      password
+      password,
+      email: email
     }),
   }).then(response => response.json())
     .catch(console.log)

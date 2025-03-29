@@ -8,6 +8,7 @@ export default function RegisterView() {
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [confirmPassword, setConfirmPassword] = useState<string>();
+  const [email, setEmail] = useState<string | undefined>()
   const navigate = useNavigate();
 
   function handleSubmit() {
@@ -30,7 +31,7 @@ export default function RegisterView() {
     }
 
     // 调用注册函数
-    registerValidate(username as string, password as string)
+    registerValidate(username as string, password as string, email)
       .then(response => {
         if (response.message === "True") {
           message.open({
@@ -68,13 +69,22 @@ export default function RegisterView() {
           type="password"
           onChange={e => setPassword(e.target.value)}
           value={password}
+          required
         />
         <Input
           placeholder="确认密码"
           type="password"
           onChange={e => setConfirmPassword(e.target.value)}
           value={confirmPassword}
+          required
         />
+        <Input
+          placeholder="邮箱"
+          type="email"
+          onChange={e => setEmail(e.target.value)}
+          value={email}
+        />
+
         <Button onClick={handleSubmit}>注册</Button>
 
         <section>
