@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { fetchResultsByKeyword } from "../utils/request";
 import { type SearchResult } from "../types/SearchResult";
-import { Card, Empty, message, Pagination, Space } from "antd";
-import CusomAutoComplete from
- "../components/CusomAutoComplete";
+import { Button, Card, Empty, message, Pagination, Space } from "antd";
+import CusomAutoComplete from "../components/CusomAutoComplete";
 import { db } from "../utils/db";
 import { useLiveQuery } from "dexie-react-hooks";
 
@@ -17,6 +16,8 @@ export default function SearchResultView() {
   const { keyword } = useParams();
   const [results, setResults] = useState<SearchResult[]>([]);
   const [page, setPage] = useState<number>(1);
+
+  console.log('加载中')
 
   const userinfo = useLiveQuery(async () => {
     const u = await db.user_cache.where('username')
@@ -48,18 +49,17 @@ export default function SearchResultView() {
         text: '',
         description: '',
         tags: [],
-        created_at: user.created_at
+        created_at: user.created_at,
+        category: ''
       })
     }
-    console.log(keyword, ans);
-    
     setResults(ans);
   }, [navigator.onLine, keyword])
 
   const PER_PAGE = 4;
   const [from, to] = usePageUntil(page, PER_PAGE)
-  
-  useEffect(() => {
+
+  const fetchResult = () => {
     /**
      * 关键字是空的或者是其他
      * 或是网络状态是离线的，就不需要请求了
@@ -79,6 +79,8 @@ export default function SearchResultView() {
           return
         }
         
+        results = results.filter(result => results.filter(r => r.title != result.title))
+
         setResults(results);
         message.destroy();
 
@@ -100,11 +102,13 @@ export default function SearchResultView() {
 
         setUserMetaToDatabase()
       }).finally(() =>  message.destroy());
-  }, [keyword]);
+  }
+  
+  useEffect(fetchResult, [keyword]);
 
   if (!keyword || !results)
     return <>
-      <CusomAutoComplete className="mx-auto my-5 flex w-1/2 p-5" keywordProps="" />
+      <CusomAutoComplete className="mx-auto my-5 flex w-1/2 p-5" />
       <Empty />
     </>
 
@@ -112,7 +116,7 @@ export default function SearchResultView() {
 
   return (
     <>
-      <CusomAutoComplete className="mx-auto my-5 flex w-1/2 p-5" keywordProps={keyword}/>
+      <CusomAutoComplete className="mx-auto my-5 flex w-1/2 p-5" defaultValue={keyword}/>
       {/* 搜索结果 */}
       <Space direction="vertical" className="mx-auto my-0 flex w-1/2">
         {results.length != 0 ? (
@@ -121,14 +125,7 @@ export default function SearchResultView() {
             .map((result, index) => (
             <Card key={index} title={result.title} extra={<a href={result.fromURL}>更多</a>}>
               <p>{result.description.concat("...")}</p>
-
-              {/* <section className="search-result-options flex flex-row">
-                {result.tags.map((tag) => (
-                  <div className="bg-gray-200 rounded px-3">{tag}</div>
-                ))}
-              </section> */}
-
-              {/* <section>{result.created_at.toLocaleTimeString()}</section> */}
+              <span className=" px-2 py-1 border-2 border-black rounded-md mt-4 block w-fit">{result.category}</span>
             </Card>
 
           ))

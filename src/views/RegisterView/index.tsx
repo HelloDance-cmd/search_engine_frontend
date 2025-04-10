@@ -1,7 +1,7 @@
 import { Button, Input, message } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { registerValidate } from "../../utils/request/userInfomationFetch";
+import { registerValidate } from "../../utils/request/UserInfoRequest";
 import "./RegisterView.css"; // 假设你有一个类似的样式文件
 
 export default function RegisterView() {
@@ -33,7 +33,8 @@ export default function RegisterView() {
     // 调用注册函数
     registerValidate(username as string, password as string, email)
       .then(response => {
-        if (response.message === "True") {
+        const data = response.data;
+        if (data.message === "True") {
           message.open({
             content: '注册成功，请登录',
             type: 'success'
@@ -41,7 +42,7 @@ export default function RegisterView() {
           navigate("/"); // 注册成功后跳转到登录页面
         } else {
           message.open({
-            content: '注册失败，请稍后再试'.concat(response.message),
+            content: '注册失败，请稍后再试'.concat(data.message),
             type: 'error'
           });
         }
@@ -85,7 +86,7 @@ export default function RegisterView() {
           value={email}
         />
 
-        <Button onClick={handleSubmit}>注册</Button>
+        <Button onClick={handleSubmit} type="primary">注册</Button>
 
         <section>
           已有账号？点击<Link to="/login">登录</Link>

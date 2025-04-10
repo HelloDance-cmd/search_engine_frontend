@@ -14,10 +14,10 @@ export default function App() {
                 {/* 导航栏：设置用户的登录状态... */}
                 <nav className="flex h-6 w-full flex-row items-center justify-end px-12 py-7">
                     <section className="group/avatar relative">
-                        <span className="px-10">{localStorage.getItem('username') || '未登录'}</span>
+                        <span className="pr-3 text-sm">{localStorage.getItem('username') || '未登录'}</span>
                         <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
                         <div className=" bg-white scale-0 absolute bottom-[-30px] right-[-10px] w-[100px] text-center border-2 rounded-md group-hover/avatar:scale-100 transition-all duration-100 origin-top-right">
-                            <div className="hover:bg-gray-100 px-3 cursor-pointer">
+                            <div className="hover:bg-gray-100 px-3 cursor-pointer text-sm">
                                 <Link to="/" target="_blank" onClick={() => {
                                 localStorage.removeItem('username')
                             }}>退出</Link>
@@ -28,8 +28,9 @@ export default function App() {
                 <Routes>
                     <Route path="/search" element={<HomeView />} />
                     <Route path="/user-setting" element={<UserProfileView />} />
-                    <Route path="/search-results/:keyword" element={<SearchResultView />} />
+                    <Route path="/search-result/:keyword" element={<SearchResultView />} />
                     <Route path="/" element={<LoginView />} />
+                    <Route path="/login" element={<LoginView />} />
                     <Route path="/register" element={<RegisterView />} />
                 </Routes>
             </BrowserRouter>

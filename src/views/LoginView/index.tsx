@@ -1,6 +1,6 @@
 import { Button, Input, message } from "antd";
 import { useState } from "react";
-import { loginValidate } from "../../utils/request/userInfomationFetch";
+import { loginValidate } from "../../utils/request/UserInfoRequest";
 import { Link, useNavigate } from "react-router";
 import "./LoginView.css"; // 引入样式文件
 
@@ -17,7 +17,8 @@ export default function LoginView() {
     
     loginValidate(username as string, password as string)
       .then(response => {
-        if (response.message === "True") {
+        const data = response.data;
+        if (data.message === "True") {
           localStorage.setItem('username', username);
           navgation("/search");
           window.location.reload()
@@ -32,9 +33,9 @@ export default function LoginView() {
   }
 
   return (
-    <div className="login-container">
+    <div className="p-10 login-container">
       <div className="login-form">
-        <h1>用户登录</h1>
+        <h1 className=" font-bold">用户登录</h1>
         <Input
           placeholder="用户名"
           onChange={e => setUsername(e.target.value)}
@@ -46,12 +47,14 @@ export default function LoginView() {
           onChange={e => setPassword(e.target.value)}
           value={password}
         />
-        <Button onClick={handleSubmit}>登录</Button>
+        <Button onClick={handleSubmit} type="primary">登录</Button>
 
         <section>
           没有账号？点击<Link to="/register">注册</Link>
         </section>
       </div>
     </div>
+
+
   );
 }

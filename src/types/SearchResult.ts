@@ -4,5 +4,6 @@ export interface SearchResult {
     text: string; // 内容
     description: string,
     tags: string[];
-    created_at: Date; // 爬取时间，创建时间
+    created_at: Date; // 爬取时间，创建时间,
+    category: string
   }
