@@ -6,4 +6,5 @@ export interface SearchResult {
     tags: string[];
     created_at: Date; // 爬取时间，创建时间,
     category: string
+    total: number
   }

@@ -4,18 +4,28 @@ import { AutoComplete, Button } from "antd";
 import { fetchRelateKeyword } from "../utils/request";
 
 interface IProps {
-  className?: string; 
+  className?: string;
   defaultValue?: string
 }
 
-export default function CusomAutoComplete({ className: _className = "", defaultValue = '' }: IProps) {
+export default function CustomerAutoComplete({ className: _className = "", defaultValue = '' }: IProps) {
   const [keyword, setKeyword] = useState<string>(defaultValue);
   const [relateResultOptions, setRelateResultOptions] = useState<string[]>();
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    navigate('/search-result/' + keyword);
+    if (keyword != '') {
+      navigate('/search-result/' + keyword);
+      // if (/^(\/search-result\/)/.test(location.pathname)) {
+      //   location.reload()
+      // }
+
+    }
+    else {
+      navigate('/search-result/' + encodeURIComponent(defaultValue))
+    }
   }
+
   const Timer = undefined;
   const debuceSearch = (value: string) => {
     clearTimeout(Timer);
@@ -40,17 +50,18 @@ export default function CusomAutoComplete({ className: _className = "", defaultV
   }, [keyword]);
 
   return (
-    <section className={`flex flex-row ${_className}`}>
+    <section className={`flex flex-row items-center gap-2 ${_className} `}>
       <AutoComplete
         value={keyword}
-        className="w-full" 
+        placeholder={defaultValue}
+        className="w-full h-10"
         onChange={(value) => {
           debuceSearch(value);
           setKeyword(value);
         }}
 
         options={relateResultOptions?.map((opt) => ({ label: opt, value: opt }))}
-        />
+      />
       <Button type="primary" onClick={handleSearch}>搜索</Button>
     </section>
   );

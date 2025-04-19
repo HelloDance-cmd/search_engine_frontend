@@ -1,4 +1,4 @@
-export class LocalStorageHelper {
+declare class LocalStorageHelper {
     static getFromLocalStorage(key: string): string;
 
     static setLocalStorage(key: string, value: string): void;

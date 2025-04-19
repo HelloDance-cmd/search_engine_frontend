@@ -1,39 +1,71 @@
-import { BrowserRouter, Link, Route, Routes } from "react-router";
+import { BrowserRouter, Link, Route, Routes, useNavigate } from "react-router";
 import HomeView from "./views/HomeView";
 import UserProfileView from "./views/UserProfileView";
 import SearchResultView from "./views/SearchResultView";
 import LoginView from "./views/LoginView";
 import RegisterView from "./views/RegisterView";
-import { Avatar } from "antd";
+import { Avatar, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import AccountManagement from "./components/AccountManagement";
+import AvatarManagement from "./components/AvatarManagement";
+import PasswordManagement from "./components/PasswordManagement";
+import HistoryManagement from "./components/HistoryManagement";
+import { LocalStorageHelper } from "./utils/storage/localStorageHelper";
+
+function NotLoggedIn() {
+  return <Button type="primary">
+    <Link to="/login">登录</Link>
+  </Button>;
+}
+
+function LoggedIn({ username }: { username: string }) {
+  const nav = useNavigate()
+  function logoutHandler() {
+    LocalStorageHelper.removeLocalStorage("username")
+    nav('/login');
+  }
+  return <section className="flex flex-row gap-2 items-center">
+    <section>欢迎你 {username}</section>
+    <Button type="primary" onClick={logoutHandler}>
+      <Link to="/login">退出</Link>
+    </Button>
+  </section>;
+}
+
 
 export default function App() {
-    return (
-        <div>
-            <BrowserRouter>
-                {/* 导航栏：设置用户的登录状态... */}
-                <nav className="flex h-6 w-full flex-row items-center justify-end px-12 py-7">
-                    <section className="group/avatar relative">
-                        <span className="pr-3 text-sm">{localStorage.getItem('username') || '未登录'}</span>
-                        <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-                        <div className=" bg-white scale-0 absolute bottom-[-30px] right-[-10px] w-[100px] text-center border-2 rounded-md group-hover/avatar:scale-100 transition-all duration-100 origin-top-right">
-                            <div className="hover:bg-gray-100 px-3 cursor-pointer text-sm">
-                                <Link to="/" target="_blank" onClick={() => {
-                                localStorage.removeItem('username')
-                            }}>退出</Link>
-                            </div>
-                        </div>
-                    </section>
-                </nav>
-                <Routes>
-                    <Route path="/search" element={<HomeView />} />
-                    <Route path="/user-setting" element={<UserProfileView />} />
-                    <Route path="/search-result/:keyword" element={<SearchResultView />} />
-                    <Route path="/" element={<LoginView />} />
-                    <Route path="/login" element={<LoginView />} />
-                    <Route path="/register" element={<RegisterView />} />
-                </Routes>
-            </BrowserRouter>
-        </div>
-    )
+  const username = LocalStorageHelper.getFromLocalStorage("username");
+
+  return (
+    <div>
+      <BrowserRouter>
+        {/* 导航栏：设置用户的登录状态... */}
+        <nav className="flex h-6 w-full flex-row items-center justify-end px-12 py-7">
+          <section className="w-full font-bold">
+            <Link to="/search">Sou 搜搜搜</Link>
+          </section>
+          <section className="group/avatar relative flex flex-row w-full justify-end">
+            <section className="pr-3 text-sm">{username ? <LoggedIn username={username} /> : <NotLoggedIn />}</section>
+            <Link to="/user-profile/account">
+              <Avatar size="large" icon={<UserOutlined />} />
+            </Link>
+          </section>
+        </nav>
+
+        <Routes>
+          <Route path="/search" element={<HomeView />} />
+          <Route path="/user-profile" element={<UserProfileView />}>
+            <Route path="account" element={<AccountManagement />} />
+            <Route path="avatar" element={<AvatarManagement />} />
+            <Route path="password" element={<PasswordManagement/>} />
+            <Route path="histories" element={<HistoryManagement />} />
+          </Route>
+          <Route path="/search-result/:keyword" element={<SearchResultView />} />
+          <Route path="/" element={<LoginView />} />
+          <Route path="/login" element={<LoginView />} />
+          <Route path="/register" element={<RegisterView />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
