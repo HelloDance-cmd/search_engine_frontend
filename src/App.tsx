@@ -44,6 +44,7 @@ export default function App() {
           <section className="w-full font-bold">
             <Link to="/search">Sou 搜搜搜</Link>
           </section>
+          {/* 通过是否由用户来决定显示是登录状态还是未登录状态 */}
           <section className="group/avatar relative flex flex-row w-full justify-end">
             <section className="pr-3 text-sm">{username ? <LoggedIn username={username} /> : <NotLoggedIn />}</section>
             <Link to="/user-profile/account">
@@ -56,7 +57,7 @@ export default function App() {
           <Route path="/search" element={<HomeView />} />
           <Route path="/user-profile" element={<UserProfileView />}>
             <Route path="account" element={<AccountManagement />} />
-            <Route path="avatar" element={<AvatarManagement />} />
+            {/* <Route path="avatar" element={<AvatarManagement />} /> */}
             <Route path="password" element={<PasswordManagement/>} />
             <Route path="histories" element={<HistoryManagement />} />
           </Route>
