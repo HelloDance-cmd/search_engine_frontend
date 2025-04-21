@@ -11,6 +11,7 @@ import AvatarManagement from "./components/AvatarManagement";
 import PasswordManagement from "./components/PasswordManagement";
 import HistoryManagement from "./components/HistoryManagement";
 import { LocalStorageHelper } from "./utils/storage/localStorageHelper";
+import RootView from "./views/RootView";
 
 function NotLoggedIn() {
   return <Button type="primary">
@@ -62,7 +63,7 @@ export default function App() {
             <Route path="histories" element={<HistoryManagement />} />
           </Route>
           <Route path="/search-result/:keyword" element={<SearchResultView />} />
-          <Route path="/" element={<LoginView />} />
+          <Route path="/" element={<RootView />} />
           <Route path="/login" element={<LoginView />} />
           <Route path="/register" element={<RegisterView />} />
         </Routes>
